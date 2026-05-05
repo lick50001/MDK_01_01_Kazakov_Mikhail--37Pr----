@@ -2,10 +2,11 @@
 using Shop.Data.Models;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Shop.Data.Mocks
 {
-    public class MockItems
+    public class MockItems : IItems
     {
         public ICategorys _category = new MockCategorys();
         public IEnumerable<Items> AllItems
@@ -20,7 +21,7 @@ namespace Shop.Data.Mocks
                         Name = "DEXP M5-70",
                         Description = "Благодаря черному корпусу с лаконичным дизайном",
                         Price = 3699,
-                        Category = _category.AllCategory.Where(x => x.Id == 0).First()
+                       Category = _category.AllCategory.FirstOrDefault(x => x.Id == 0)
                     },
                     new Items(),
                     new Items(),

@@ -1,11 +1,14 @@
-﻿using Shop.Data.Models;
+﻿using Shop.Data.Interfaces;
+using Shop.Data.Models;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Shop.Data.Mocks
 {
-    public class MockCaregorys
+    public class MockCategorys : ICategorys
     {
-        public IEnumerable<Categorys> AllCategorys
+        public IEnumerable<Categorys> AllCategory
         {
             get
             {

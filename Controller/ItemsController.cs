@@ -3,7 +3,7 @@ using Shop.Data.Interfaces;
 
 namespace Shop.Controller
 {
-    public class ItemsController
+    public class ItemsController : Microsoft.AspNetCore.Mvc.Controller
     {
         public IItems IAllItems;
         private ICategorys IAllCategorys;

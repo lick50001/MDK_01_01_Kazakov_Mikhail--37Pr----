@@ -17,7 +17,7 @@ namespace Shop.Controller
         {
             ViewBag.Title = "Страница с предметами";
 
-            var cars -IAllItems.AllItems;
+            var cars = IAllItems.AllItems;
             return View(cars);
         }
     }

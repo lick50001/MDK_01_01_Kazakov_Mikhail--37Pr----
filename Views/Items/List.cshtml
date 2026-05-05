@@ -1,0 +1,18 @@
+﻿@using Shop.Data.Models
+@model IEnumerable<Items>
+
+@{
+	Layout = "_Layout";
+}
+
+<h2>Все предметы</h2>
+@{
+	foreach(var item in Model)
+	{
+		<div>
+			<h3>Модель: @item.Name</h3>
+			<p>Цена: @item.Price.ToString("c")</p>
+			<p>Категория: @item.Category.Name</p>
+		</div>
+	}
+}

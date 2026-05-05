@@ -7,8 +7,20 @@
     <title>@ViewBag.Title</title>
 </head>
 <body>
-    <div>
+    <header>
+        <img src="~/img/icon.png" class="logo" alt="Логотип" />
+
+        <div class="search-box">
+            <input class="search" placeholder="Поиск по сайту" />
+        </div>
+
+        <div class="basket-container">
+            <img class="basket" src="~/img/ic-basket.png" alt="Корзина" />
+        </div>
+    </header>
+
+    <main class="container">
         @RenderBody()
-    </div>
+    </main>
 </body>
 </html>

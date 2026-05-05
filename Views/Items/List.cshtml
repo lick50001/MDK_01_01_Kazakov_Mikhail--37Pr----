@@ -1,21 +1,48 @@
 ﻿@model IEnumerable<Shop.Data.Models.Items>
 
-<h2>Все автомобили</h2>
-<div class="row mt-5 mb-2">
-    @if (Model != null)
+@{
+    ViewData["Title"] = "Все автомобили";
+    Layout = "_Layout";
+}
+
+<h2 class="mb-4">Все автомобили</h2>
+
+<div class="row g-4">
+    @if (Model != null && Model.Any())
     {
         foreach (var car in Model)
         {
-            <div>
-                <h3>Модель: @car.Name</h3>
-                <p>Цена: @car.Price.ToString("c")</p>
-                @* Ошибка часто здесь: если Category == null, обращение к .Name вызовет Exception *@
-                <p>Категория: @(car.Category?.Name ?? "Не указана")</p>
+            <div class="col-md-6 col-lg-4 col-xl-3">
+                <div class="car-card">
+                    <div class="image-container">
+                        @if (!string.IsNullOrEmpty(car.Img))
+                        {
+                            <img src="@car.Img" alt="@car.Name" class="car-image" />
+                        }
+                        else
+                        {
+                            <img src="~/img/no-image.png" alt="Нет фото" class="car-image placeholder" />
+                        }
+                    </div>
+
+                    <div class="content">
+                        <h3>@car.Name</h3>
+                        <div class="price">@car.Price.ToString("c")</div>
+                        <div class="category">
+                            @(car.Category?.Name ?? "Не указана")
+                        </div>
+                        <div class="description">
+                            @car.Description
+                        </div>
+                    </div>
+                </div>
             </div>
         }
     }
     else
     {
-        <p>Данные не загружены. Проверьте инициализацию Mock-объектов.</p>
+        <div class="col-12">
+            <p class="text-muted fs-5">Нет автомобилей для отображения.</p>
+        </div>
     }
 </div>

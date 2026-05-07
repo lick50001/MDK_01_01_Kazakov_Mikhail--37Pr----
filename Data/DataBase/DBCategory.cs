@@ -6,15 +6,15 @@ using Shop.Data.Models;
 
 namespace Shop.Data.DataBase
 {
-    public class DBCategory
+    public class DBCategory : ICategorys
     {
-        public IEnumerable<ICategorys> AllCategorys
+        public IEnumerable<Categorys> AllCategory
         {
             get
             {
-                List<ICategorys> categorys = new List<ICategorys>();
+                List<Categorys> categorys = new List<Categorys>();
                 MySqlConnection conn = Connection.MySqlOpen();
-                MySqlDataReader CategorysData = Connection.MySqlQuery("SELECT * FROM Shop.Categorys ORDER BY 'Name';", conn);
+                MySqlDataReader CategorysData = Connection.MySqlQuery("SELECT * FROM Shop.Categorys ORDER BY Name;", conn);
                 while (CategorysData.Read())
                 {
                     categorys.Add(new Categorys()

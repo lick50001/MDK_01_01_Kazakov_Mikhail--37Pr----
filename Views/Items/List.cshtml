@@ -1,23 +1,35 @@
-﻿@model IEnumerable<Shop.Data.Models.Items>
+﻿@using Shop.Data.ViewModels
+@model VMItems
 
 @{
-    ViewData["Title"] = "Все автомобили";
+    ViewData["Title"] = "Все предметы";
     Layout = "_Layout";
 }
 
-<h2 class="mb-4">Все автомобили</h2>
+<div class="sort-container mb-4">
+    <label for="sortPrice">Сортировка по цене:</label>
+    <select id="sortPrice" onchange="sortByPrice(this)">
+        <option value="0">По умолчанию</option>
+        <option value="1">дешевле</option>
+        <option value="2">дороже</option>
+    </select>
+</div>
 
-<div class="row g-4">
-    @if (Model != null && Model.Any())
+<h2 class="mb-4">Все предметы</h2>
+
+<div class="row g-4" id="itemsContainer">
+    @if (Model.Items != null && Model.Items.Any())
     {
-        foreach (var car in Model)
+        var items = Model.Items.ToList();
+
+        @foreach (var item in items)
         {
-            <div class="col-md-6 col-lg-4 col-xl-3">
+            <div class="col-md-6 col-lg-4 col-xl-3 item-card" data-price="@item.Price">
                 <div class="car-card">
                     <div class="image-container">
-                        @if (!string.IsNullOrEmpty(car.Img))
+                        @if (!string.IsNullOrEmpty(item.Img))
                         {
-                            <img src="@car.Img" alt="@car.Name" class="car-image" />
+                            <img src="@item.Img" alt="@item.Name" class="car-image" />
                         }
                         else
                         {
@@ -26,13 +38,13 @@
                     </div>
 
                     <div class="content">
-                        <h3>@car.Name</h3>
-                        <div class="price">@car.Price.ToString("c")</div>
+                        <h3>@item.Name</h3>
+                        <div class="price">@item.Price.ToString("C")</div>
                         <div class="category">
-                            @(car.Category?.Name ?? "Не указана")
+                            @(item.Category?.Name ?? "Не указана")
                         </div>
                         <div class="description">
-                            @car.Description
+                            @item.Description
                         </div>
                     </div>
                 </div>
@@ -42,7 +54,33 @@
     else
     {
         <div class="col-12">
-            <p class="text-muted fs-5">Нет автомобилей для отображения.</p>
+            <p class="text-muted fs-5">Нет предметов для отображения.</p>
         </div>
     }
 </div>
+
+<script>
+    function sortByPrice(sender) {
+        var sortValue = sender.value;
+        var container = document.getElementById('itemsContainer');
+        var items = Array.from(container.getElementsByClassName('item-card'));
+
+        if (sortValue == '1') {
+            items.sort(function(a, b) {
+                return a.getAttribute('data-price') - b.getAttribute('data-price');
+            });
+        } else if (sortValue == '2') {
+            items.sort(function(a, b) {
+                return b.getAttribute('data-price') - a.getAttribute('data-price');
+            });
+        } else {
+            items.sort(function(a, b) {
+                return a.getAttribute('data-id') - b.getAttribute('data-id');
+            });
+        }
+
+        items.forEach(function(item) {
+            container.appendChild(item);
+        });
+    }
+</script>

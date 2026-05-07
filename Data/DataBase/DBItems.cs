@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using MySql.Data.MySqlClient;
 using Shop.Data.Common;
+using Shop.Data.Interfaces;
 using Shop.Data.Models;
 
 namespace Shop.Data.DataBase
 {
-    public class DBItems : Items
+    public class DBItems : IItems
     {
-        public IEnumerable<Categorys> Categorys = (IEnumerable<Categorys>)new DBCategory().AllCategorys;
+        public IEnumerable<Categorys> Categorys = (IEnumerable<Categorys>)new DBCategory().AllCategory;
 
         public IEnumerable<Items> AllItems
         {
@@ -17,7 +18,7 @@ namespace Shop.Data.DataBase
             {
                 List<Items> items = new List<Items>();
                 MySqlConnection conn = Connection.MySqlOpen();
-                MySqlDataReader ItemsData = Connection.MySqlQuery("SELECT * FROM Shop.items ORDER BY 'Name';", conn);
+                MySqlDataReader ItemsData = Connection.MySqlQuery("SELECT * FROM Shop.items ORDER BY Name;", conn);
                 while (ItemsData.Read())
                 {
                     items.Add(new Items()
@@ -30,7 +31,7 @@ namespace Shop.Data.DataBase
                         Category = ItemsData.IsDBNull(5) ? null : Categorys.Where(x => x.Id == ItemsData.GetInt32(5)).First()
                     });
                 }
-                conn.Close();
+                //conn.Close();
                 return items;
             }
         }

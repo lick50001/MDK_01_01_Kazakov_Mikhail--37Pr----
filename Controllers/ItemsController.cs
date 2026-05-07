@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Shop.Data.Interfaces;
+using Shop.Data.Models;
 using Shop.Data.ViewModels;
 
 namespace Shop.Controllers
@@ -23,6 +24,13 @@ namespace Shop.Controllers
             VMItems.SelectCategory = id;
 
             return View(VMItems);
+        }
+
+        [HttpGet]
+        public ViewResult Add()
+        {
+            IEnumerable<Categorys> categorys = IAllCategorys.AllCategory;
+            return View(categorys);
         }
     }
 }

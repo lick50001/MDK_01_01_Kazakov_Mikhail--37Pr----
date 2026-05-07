@@ -144,3 +144,22 @@ header {
             height: 200px;
         }
 }
+
+form {
+    box-shadow: 2px 2px 2px width: 408px;
+    padding: 10px;
+    margin: 25px auto;
+}
+
+form div {
+    margin-bottom: 10px;
+}
+
+form input {
+    width: -webkit-fill-available;
+}
+
+form select{
+    width: -webkit-fill-available;
+}
+

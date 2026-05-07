@@ -91,14 +91,16 @@ namespace Shop.Controllers
             }
         }
 
+
         [HttpGet]
-        public IActionResult Edit()
+        public IActionResult Update()
         {
+            ViewBag.Categories = IAllCategorys.AllCategory;
             return View();
         }
 
         [HttpPost]
-        public IActionResult Edit(int _id, string name, string descr, float price, int idCategory, string imageUrl)
+        public IActionResult Update(int _id, string name, string descr, float price, int idCategory, string imageUrl)
         {
             try
             {

@@ -1,20 +1,39 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
+﻿using Shop.Data.DataBase;
+using Shop.Data.Interfaces;
 
-namespace Shop
+var builder = WebApplication.CreateBuilder(args);
+
+// Регистрация сервисов
+builder.Services.AddControllersWithViews();
+builder.Services.AddTransient<ICategorys, DBCategory>();
+builder.Services.AddTransient<IItems, DBItems>();
+
+// Логирование (теперь можно!)
+builder.Logging.AddConsole();
+builder.Logging.SetMinimumLevel(LogLevel.Debug);
+
+var app = builder.Build();
+
+// Конфигурация конвейера
+if (!app.Environment.IsDevelopment())
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
-
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
-    }
+    app.UseExceptionHandler("/Home/Error");
 }
+
+app.UseStaticFiles();
+app.UseRouting();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Items}/{action=List}/{id?}");
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
+{
+    app.UseExceptionHandler("/Home/Error");
+}
+
+app.Run();

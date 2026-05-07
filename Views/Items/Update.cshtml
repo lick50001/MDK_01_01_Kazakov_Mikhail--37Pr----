@@ -5,8 +5,12 @@
 }
 <form method="post" enctype="multipart/form-data" asp-action="Add" asp-controller="Items">
 	<div>
+		Id:
+		<br /><input name="name" placeholder="Id:" />
+	</div>
+	<div>
 		Наименование:
-		<br /><input name="name" placeholder="наименование:"/>
+		<br /><input name="name" placeholder="наименование:" />
 	</div>
 	<div>
 		Описание:
@@ -14,21 +18,22 @@
 	</div>
 	<div>
 		<label for="file">Изображение</label>
-		<br /><input name="files" type="file"/>
+		<br /><input name="files" type="file" />
 	</div>
 	<div>
 		Стоимость:
-		<br /><input name="price"/>
+		<br /><input name="price" />
 	</div>
 	<div>
 		Категория:
-		<br/><select name="idCategory">
+		<br /><select name="idCategory">
 			@{
-				foreach(var Category in Model){
-					<option	value="@Category.Id">@Category.Name</option>
+				foreach (var Category in Model)
+				{
+					<option value="@Category.Id">@Category.Name</option>
 				}
 			}
 		</select>
 	</div>
-	<input type="submit"/>
+	<input type="submit" />
 </form>

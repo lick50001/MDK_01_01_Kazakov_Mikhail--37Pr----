@@ -1,0 +1,12 @@
+﻿@using Shop.Data.Models
+@model IEnumerable<Categorys>
+@{
+	Layout = "_Layout";
+}
+<form method="post" enctype="multipart/form-data" asp-action="Add" asp-controller="Items">
+	<div>
+		Id предмета:
+		<br /><input name="id" placeholder="Id:" />
+	</div>
+	<input type="submit" />
+</form>

@@ -11,6 +11,8 @@ namespace Shop.Data.DataBase
     public class DBItems : IItems
     {
         public IEnumerable<Categorys> Categorys = (IEnumerable<Categorys>)new DBCategory().AllCategory;
+        private readonly ILogger<DBItems> _logger;
+        public DBItems(ILogger<DBItems> logger) => _logger = logger;
 
         public IEnumerable<Items> AllItems
         {
@@ -31,9 +33,41 @@ namespace Shop.Data.DataBase
                         Category = ItemsData.IsDBNull(5) ? null : Categorys.Where(x => x.Id == ItemsData.GetInt32(5)).First()
                     });
                 }
-                //conn.Close();
                 return items;
             }
+        }
+
+        public int Add(Items item)
+        {
+            MySqlConnection conn = Connection.MySqlOpen();
+            Connection.MySqlQuery($"INSERT INTO `Shop`.`Items` (`Name`, `Description`, `Img`, `Price`, `Category`) VALUES ('{item.Name}', '{item.Description}', '{item.Img}', '{item.Price}', '{item.Category.Id}');", conn);
+            conn.Close();
+
+            int IdItem = -1;
+            conn = Connection.MySqlOpen();
+            MySqlDataReader myReader = Connection.MySqlQuery($"SELECT Id FROM Shop.Items WHERE Name = '{item.Name}' AND Description = '{item.Description}' AND Price = '{item.Price}' AND Category = '{item.Category.Id}';", conn);
+
+            if (myReader.HasRows)
+            {
+                myReader.Read();
+                IdItem = myReader.GetInt32(0);
+            }
+
+            conn.Close();
+            return IdItem;
+        }
+
+
+        public void Delete(int id)
+        {
+            MySqlConnection conn = Connection.MySqlOpen();
+            MySqlDataReader ItemsData = Connection.MySqlQuery($"DELETE FROM `Shop`.`Items` WHERE (`Id` = '{id}');", conn);
+            conn.Close();
+        }
+
+        public void Update(int Id)
+        {
+            
         }
     }
 }

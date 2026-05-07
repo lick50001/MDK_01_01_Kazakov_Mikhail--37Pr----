@@ -7,6 +7,9 @@ namespace Shop.Data.Interfaces
 {
     public interface ICategorys
     {
-        IEnumerable<Categorys> AllCategory {  get; }
+        int Id { get; set; }
+        string Name { get; set; }
+        string Description { get; set; }
+        //IEnumerable<Categorys> AllCategory {  get; }
     }
 }

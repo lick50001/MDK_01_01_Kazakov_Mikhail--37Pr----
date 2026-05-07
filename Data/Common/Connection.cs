@@ -20,7 +20,9 @@ namespace Shop.Data.Common
             return cmd.ExecuteReader();
         }
 
-        public static void MySqlClose(MySqlConnection connection) {
+        public static void MySqlClose(MySqlConnection connection)
+        {
             connection.Close();
+        }
     }
 }

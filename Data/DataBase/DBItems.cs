@@ -65,9 +65,25 @@ namespace Shop.Data.DataBase
             conn.Close();
         }
 
-        public void Update(int Id)
+        public void Update(Items item)
         {
-            
+            const string ConnData = "server=localhost;port=3306;database=Shop;uid=root;pwd=;";
+            using var conn = new MySqlConnection(ConnData);
+            conn.Open();
+
+            using var cmd = new MySqlCommand(@"
+            UPDATE items 
+            SET Name = @name, Description = @descr, Img = @img, Price = @price, Category = @catId 
+            WHERE Id = @id", conn);
+
+            cmd.Parameters.AddWithValue("@id", item.Id);
+            cmd.Parameters.AddWithValue("@name", item.Name ?? "");
+            cmd.Parameters.AddWithValue("@descr", item.Description ?? "");
+            cmd.Parameters.AddWithValue("@img", item.Img ?? "");
+            cmd.Parameters.AddWithValue("@price", item.Price);
+            cmd.Parameters.AddWithValue("@catId", item.Category?.Id ?? 0);
+
+            cmd.ExecuteNonQuery();
         }
     }
 }

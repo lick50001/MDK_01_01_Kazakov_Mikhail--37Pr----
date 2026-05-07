@@ -1,39 +1,63 @@
-﻿@using Shop.Data.Models
-@model IEnumerable<Categorys>
-@{
-	Layout = "_Layout";
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Редактирование товара";
 }
-<form method="post" enctype="multipart/form-data" asp-action="Add" asp-controller="Items">
-	<div>
-		Id:
-		<br /><input name="name" placeholder="Id:" />
-	</div>
-	<div>
-		Наименование:
-		<br /><input name="name" placeholder="наименование:" />
-	</div>
-	<div>
-		Описание:
-		<br /><input name="descr" placeholder="Описание:" />
-	</div>
-	<div>
-		<label for="file">Изображение</label>
-		<br /><input name="files" type="file" />
-	</div>
-	<div>
-		Стоимость:
-		<br /><input name="price" />
-	</div>
-	<div>
-		Категория:
-		<br /><select name="idCategory">
-			@{
-				foreach (var Category in Model)
-				{
-					<option value="@Category.Id">@Category.Name</option>
-				}
-			}
-		</select>
-	</div>
-	<input type="submit" />
-</form>
+
+<h2>Редактирование товара</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Введите ID товара для редактирования</h5>
+
+        <form method="post" asp-action="Edit" asp-controller="Items">
+            <div class="mb-3">
+                <label class="form-label">ID товара:</label>
+                <input type="number" class="form-control" name="_id" required placeholder="Например: 1" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Наименование:</label>
+                <input type="text" class="form-control" name="name" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Описание:</label>
+                <textarea class="form-control" name="descr" rows="3"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Цена:</label>
+                <input type="number" class="form-control" name="price" step="0.01" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">URL изображения:</label>
+                <input type="text" class="form-control" name="imageUrl" placeholder="/img/no-image.png" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Категория:</label>
+                <select class="form-control" name="idCategory">
+                    @{
+                        var categories = ViewBag.Categories as IEnumerable<Shop.Data.Models.Categorys>;
+                        if (categories != null)
+                        {
+                            foreach (var cat in categories)
+                            {
+                                <option value="@cat.Id">@cat.Name</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">💾 Сохранить</button>
+            <a href="/Items/List" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>

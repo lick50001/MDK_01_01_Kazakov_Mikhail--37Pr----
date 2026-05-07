@@ -118,7 +118,7 @@ namespace Shop.Controllers
                     Category = new Categorys { Id = idCategory },
                     Img = string.IsNullOrEmpty(imageUrl) ? "/img/no-image.png" : imageUrl
                 };
-                IAllItems.Update(_id);
+                IAllItems.Update(item);
                 TempData["Success"] = "Товар успешно обновлен!";
                 return RedirectToAction("List");
             }

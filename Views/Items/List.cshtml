@@ -1,6 +1,5 @@
 ﻿@using Shop.Data.ViewModels
 @model VMItems
-
 @{
     ViewData["Title"] = "Все предметы";
     Layout = "_Layout";
@@ -10,8 +9,8 @@
     <label for="sortPrice">Сортировка по цене:</label>
     <select id="sortPrice" onchange="sortByPrice(this)">
         <option value="0">По умолчанию</option>
-        <option value="1">дешевле</option>
-        <option value="2">дороже</option>
+        <option value="1">Дешевле</option>
+        <option value="2">Дороже</option>
     </select>
 </div>
 
@@ -20,40 +19,22 @@
 <div class="row g-4" id="itemsContainer">
     @if (Model.Items != null && Model.Items.Any())
     {
-
-        var items = Model.Items.ToList();
-
-        @foreach (var item in items)
+        @foreach (var item in Model.Items)
         {
-@*             if (item.Category.Id == Model.SelectCategory)
-            {
-                <div class="item">
-                    <img src="@item.Img"/>
-                    <div class="basket">
-                        <div class="button" id="@item.Id">
-                            В корзину
-                        </div>
-                        <div class="count">
-                            <div class="button min">-</div>
-                            <div class="text">1</div>
-                            <div class="button max">+</div>
-                        </div>
-                    </div>
-                </div>                
-            } *@
-            <div class="col-md-6 col-lg-4 col-xl-3 item-card" data-price="@item.Price">
+            <div class="col-item item"
+                 data-price="@item.Price"
+                 data-id="@item.Id">
                 <div class="car-card">
                     <div class="image-container">
                         @if (!string.IsNullOrEmpty(item.Img))
                         {
-                            <img src="@item.Img" alt="@item.Name" class="car-image" />
+                            <img src="/img/@item.Img" alt="@item.Name" class="car-image" />
                         }
                         else
                         {
-                            <img src="~/img/no-image.png" alt="Нет фото" class="car-image placeholder" />
+                            <img src="~/img/no-image.png" alt="Нет фото" class="car-image" />
                         }
                     </div>
-
                     <div class="content">
                         <h3>@item.Name</h3>
                         <div class="price">@item.Price.ToString("C")</div>
@@ -62,6 +43,17 @@
                         </div>
                         <div class="description">
                             @item.Description
+                        </div>
+
+                        <div class="basket">
+                            <div class="button add-to-cart" data-idItem="@item.Id">
+                                В корзину
+                            </div>
+                            <div class="count">
+                                <div class="button min">−</div>
+                                <div class="text">1</div>
+                                <div class="button max">+</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -76,28 +68,69 @@
     }
 </div>
 
-<script>
-    function sortByPrice(sender) {
-        var sortValue = sender.value;
-        var container = document.getElementById('itemsContainer');
-        var items = Array.from(container.getElementsByClassName('item-card'));
+@section Scripts {
+    <script>
+        // Кнопка "В корзину"
+        $(".item").on("click", ".basket .button.add-to-cart", function () {
+            var $btn = $(this);
+            var $basket = $btn.closest(".basket");
+            $basket.children(".count").show();
+            $btn.hide();
 
-        if (sortValue == '1') {
-            items.sort(function(a, b) {
-                return a.getAttribute('data-price') - b.getAttribute('data-price');
+            $.ajax({
+                url: '@Url.Action("Basket", "Items")',
+                contentType: "application/json; charset=utf-8",
+                data: { idItem: $btn.attr("data-idItem") },
+                dataType: "json",
+                success: SuccessBasket,
+                error: AjaxError
             });
-        } else if (sortValue == '2') {
-            items.sort(function(a, b) {
-                return b.getAttribute('data-price') - a.getAttribute('data-price');
-            });
-        } else {
-            items.sort(function(a, b) {
-                return a.getAttribute('data-id') - b.getAttribute('data-id');
-            });
+        });
+
+        // Кнопка "−"
+        $(".item").on("click", ".count .min", function () {
+            var $count = $(this).closest(".count");
+            var $textEl = $count.children(".text");
+            var val = parseInt($textEl.text());
+            if (val > 1) {
+                $textEl.text(val - 1);
+            } else {
+                // Если количество дошло до 0 — скрыть счётчик, показать кнопку
+                $count.hide();
+                $count.siblings(".add-to-cart").show();
+            }
+        });
+
+        // Кнопка "+"
+        $(".item").on("click", ".count .max", function () {
+            var $textEl = $(this).closest(".count").children(".text");
+            $textEl.text(parseInt($textEl.text()) + 1);
+        });
+
+        function SuccessBasket(data) {
+            console.log(data);
         }
 
-        items.forEach(function(item) {
-            container.appendChild(item);
-        });
-    }
-</script>
+        function AjaxError() {
+            console.log("Ошибка выполнения ajax");
+        }
+
+        // Сортировка
+        function sortByPrice(sender) {
+            const sortValue = sender.value;
+            const container = document.getElementById('itemsContainer');
+            const items = Array.from(container.querySelectorAll('.item'));
+
+            if (sortValue === '1') {
+                items.sort((a, b) => parseFloat(a.dataset.price) - parseFloat(b.dataset.price));
+            } else if (sortValue === '2') {
+                items.sort((a, b) => parseFloat(b.dataset.price) - parseFloat(a.dataset.price));
+            } else {
+                items.sort((a, b) => parseInt(a.dataset.id) - parseInt(b.dataset.id));
+            }
+
+            while (container.firstChild) container.removeChild(container.firstChild);
+            items.forEach(item => container.appendChild(item));
+        }
+    </script>
+}

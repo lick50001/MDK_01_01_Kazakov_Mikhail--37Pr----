@@ -146,20 +146,84 @@ header {
 }
 
 form {
-    box-shadow: 2px 2px 2px width: 408px;
+    width: 100%;
+    max-width: 408px;
     padding: 10px;
     margin: 25px auto;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-form div {
-    margin-bottom: 10px;
+    form div {
+        margin-bottom: 10px;
+    }
+
+    form input,
+    form select {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 1rem;
+        box-sizing: border-box;
+    }
+
+.button {
+    height: 36px;
+    padding: 0 16px;
+    cursor: pointer;
+    text-align: center;
+    line-height: 36px;
+    background: #ffc300;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    color: #000;
+    transition: background 0.2s;
 }
 
-form input {
-    width: -webkit-fill-available;
+    .button:hover {
+        background: #ffb700;
+    }
+
+/* Блок корзины под карточкой товара */
+.basket {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
 }
 
-form select{
-    width: -webkit-fill-available;
+    .basket .add-to-cart.button {
+        height: 36px;
+        width: auto;
+        min-width: 110px;
+    }
+
+.count {
+    display: none;
+    align-items: center;
+    background: #f0f0f0;
+    border-radius: 6px;
+    overflow: hidden;
 }
+
+    .count .button {
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        background: #9b9b9b;
+        color: white;
+        font-size: 18px;
+        padding: 0;
+    }
+
+    .count .text {
+        width: 40px;
+        text-align: center;
+        font-weight: 600;
+        color: #333;
+    }
+
 

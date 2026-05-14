@@ -20,10 +20,27 @@
 <div class="row g-4" id="itemsContainer">
     @if (Model.Items != null && Model.Items.Any())
     {
+
         var items = Model.Items.ToList();
 
         @foreach (var item in items)
         {
+@*             if (item.Category.Id == Model.SelectCategory)
+            {
+                <div class="item">
+                    <img src="@item.Img"/>
+                    <div class="basket">
+                        <div class="button" id="@item.Id">
+                            В корзину
+                        </div>
+                        <div class="count">
+                            <div class="button min">-</div>
+                            <div class="text">1</div>
+                            <div class="button max">+</div>
+                        </div>
+                    </div>
+                </div>                
+            } *@
             <div class="col-md-6 col-lg-4 col-xl-3 item-card" data-price="@item.Price">
                 <div class="car-card">
                     <div class="image-container">

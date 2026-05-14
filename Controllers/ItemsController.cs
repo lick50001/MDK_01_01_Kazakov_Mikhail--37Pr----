@@ -159,6 +159,51 @@ namespace Shop.Controllers
                 return RedirectToAction("Delete");
             }
         }
+
+        [HttpPost]
+        public IActionResult Basket(int idItem = -1)
+        {
+            if (idItem == -1)
+                return BadRequest();
+
+            var item = IAllItems.AllItems.FirstOrDefault(x => x.Id == idItem);
+            if (item == null)
+                return NotFound();
+
+            var existing = Startup.BasketItem.Find(x => x.Id == idItem);
+            if (existing == null)
+            {
+                Startup.BasketItem.Add(new ItemsBasket { Id = idItem, Count = 1, Item = item });
+            }
+            else
+            {
+                existing.Count++;
+            }
+
+            return Json(Startup.BasketItem);
+        }
+
+        [HttpPost]
+        public IActionResult BasketCount(int idItem, int count)
+        {
+            var existing = Startup.BasketItem.Find(x => x.Id == idItem);
+            if (existing == null)
+                return NotFound();
+
+            if (count <= 0)
+                Startup.BasketItem.Remove(existing);
+            else
+                existing.Count = count;
+
+            return Json(Startup.BasketItem);
+        }
+
+        [HttpGet]
+        public IActionResult BasketTotal()
+        {
+            int total = Startup.BasketItem.Sum(x => x.Count);
+            return Json(total);
+        }
     }
 }
 

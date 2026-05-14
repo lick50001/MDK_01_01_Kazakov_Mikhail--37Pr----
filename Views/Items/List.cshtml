@@ -70,7 +70,7 @@
 
 @section Scripts {
     <script>
-        // Кнопка "В корзину"
+               // Кнопка "В корзину"
         $(".item").on("click", ".basket .button.add-to-cart", function () {
             var $btn = $(this);
             var $basket = $btn.closest(".basket");
@@ -79,7 +79,7 @@
 
             $.ajax({
                 url: '@Url.Action("Basket", "Items")',
-                contentType: "application/json; charset=utf-8",
+                type: "POST",
                 data: { idItem: $btn.attr("data-idItem") },
                 dataType: "json",
                 success: SuccessBasket,
@@ -91,29 +91,66 @@
         $(".item").on("click", ".count .min", function () {
             var $count = $(this).closest(".count");
             var $textEl = $count.children(".text");
-            var val = parseInt($textEl.text());
-            if (val > 1) {
-                $textEl.text(val - 1);
-            } else {
-                // Если количество дошло до 0 — скрыть счётчик, показать кнопку
+            var idItem = $(this).closest(".item").attr("data-id");
+            var count = parseInt($textEl.text()) - 1;
+
+            if (count <= 0) {
                 $count.hide();
                 $count.siblings(".add-to-cart").show();
+            } else {
+                $textEl.text(count);
             }
+
+            $.ajax({
+                url: '@Url.Action("BasketCount", "Items")',
+                type: "POST",
+                data: { idItem: idItem, count: count },
+                dataType: "json",
+                success: SuccessBasket,
+                error: AjaxError
+            });
         });
 
         // Кнопка "+"
         $(".item").on("click", ".count .max", function () {
             var $textEl = $(this).closest(".count").children(".text");
-            $textEl.text(parseInt($textEl.text()) + 1);
+            var idItem = $(this).closest(".item").attr("data-id");
+            var count = parseInt($textEl.text()) + 1;
+            $textEl.text(count);
+
+            $.ajax({
+                url: '@Url.Action("BasketCount", "Items")',
+                type: "POST",
+                data: { idItem: idItem, count: count },
+                dataType: "json",
+                success: SuccessBasket,
+                error: AjaxError
+            });
         });
 
+        // ← все три функции на одном уровне, не вложены друг в друга
+        function updateBasketCount() {
+            $.ajax({
+                url: '@Url.Action("BasketTotal", "Items")',
+                type: "GET",
+                success: function (total) {
+                    $("#basketCount").text(total);
+                }
+            });
+        }
+
         function SuccessBasket(data) {
-            console.log(data);
+            updateBasketCount();  // ← вызываем обновление счётчика
         }
 
         function AjaxError() {
             console.log("Ошибка выполнения ajax");
         }
+
+        // Вызов при загрузке страницы — чтобы счётчик показывал актуальное значение сразу
+        $(document).ready(function () {
+            updateBasketCount();
+        });
 
         // Сортировка
         function sortByPrice(sender) {

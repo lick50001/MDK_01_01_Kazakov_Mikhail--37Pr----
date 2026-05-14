@@ -1,28 +1,28 @@
 ﻿<!DOCTYPE html>
-
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <link rel="stylesheet" href="~/css/Style.css"/>
+    <link rel="stylesheet" href="~/css/Style.css" />
     <title>@ViewBag.Title</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 </head>
 <body>
     <header>
         <img src="~/img/icon.png" class="logo" alt="Логотип" />
-
         <div class="search-box">
             <input class="search" placeholder="Поиск по сайту" />
         </div>
-
         <div class="basket-container">
-            <img class="basket" src="~/img/ic-basket.png" alt="Корзина" />
+            <img src="~/img/ic-basket.png" class="basket" />
+            <span id="basketCount">0</span>
         </div>
     </header>
 
     <main class="container">
         @RenderBody()
     </main>
+
+    <!-- jQuery один раз, перед секцией Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

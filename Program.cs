@@ -1,5 +1,6 @@
 ﻿using Shop.Data.DataBase;
 using Shop.Data.Interfaces;
+using Shop.Data.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,12 +1,52 @@
 ﻿@using Shop.Data.Models
-@model IEnumerable<Categorys>
+@model Items
 @{
-	Layout = "_Layout";
+    Layout = "_Layout";
+    ViewData["Title"] = "Удаление товара";
 }
-<form method="post" enctype="multipart/form-data" asp-action="Add" asp-controller="Items">
-	<div>
-		Id предмета:
-		<br /><input name="id" placeholder="Id:" />
-	</div>
-	<input type="submit" />
-</form>
+
+<h2>Удаление товара</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <h5>Вы уверены, что хотите удалить этот товар?</h5>
+
+        <div class="warning">
+            <strong>Внимание!</strong> Это действие необратимо.
+        </div>
+
+        <table class="table">
+            <tr>
+                <th>ID:</th>
+                <td>@Model.Id</td>
+            </tr>
+            <tr>
+                <th>Название:</th>
+                <td>@Model.Name</td>
+            </tr>
+            <tr>
+                <th>Описание:</th>
+                <td>@Model.Description</td>
+            </tr>
+            <tr>
+                <th>Цена:</th>
+                <td>@Model.Price.ToString("C")</td>
+            </tr>
+            <tr>
+                <th>Категория:</th>
+                <td>@(Model.Category?.Name ?? "Не указана")</td>
+            </tr>
+        </table>
+
+        <form method="post" asp-action="Delete" asp-controller="Items">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <button type="submit" class="btn-danger">Да, удалить</button>
+            <a href="/Items/List" class="btn-cancel">Отмена</a>
+        </form>
+    </div>
+</div>

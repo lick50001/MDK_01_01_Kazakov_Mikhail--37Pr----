@@ -1,4 +1,6 @@
-﻿@{
+﻿@using Shop.Data.Models
+@model Items
+@{
     Layout = "_Layout";
     ViewData["Title"] = "Редактирование товара";
 }
@@ -7,57 +9,70 @@
 
 @if (TempData["Error"] != null)
 {
-    <div class="alert alert-danger">@TempData["Error"]</div>
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
 }
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">Введите ID товара для редактирования</h5>
+        <form method="post" enctype="multipart/form-data" asp-action="Update" asp-controller="Items">
+            <input type="hidden" name="id" value="@Model.Id" />
 
-        <form method="post" asp-action="Edit" asp-controller="Items">
-            <div class="mb-3">
-                <label class="form-label">ID товара:</label>
-                <input type="number" class="form-control" name="_id" required placeholder="Например: 1" />
+            <div class="form-group">
+                <label>Наименование:</label>
+                <input type="text" class="form-control" name="name" value="@Model.Name" required />
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Наименование:</label>
-                <input type="text" class="form-control" name="name" required />
+            <div class="form-group">
+                <label>Описание:</label>
+                <textarea class="form-control" name="descr" rows="3">@Model.Description</textarea>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Описание:</label>
-                <textarea class="form-control" name="descr" rows="3"></textarea>
+            <div class="form-group">
+                <label>Цена:</label>
+                <input type="number" class="form-control" name="price" value="@Model.Price" step="0.01" required />
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Цена:</label>
-                <input type="number" class="form-control" name="price" step="0.01" required />
+            <div class="form-group">
+                <label>Изображение:</label>
+                @if (!string.IsNullOrEmpty(Model.Img) && Model.Img != "no-image.png")
+                {
+                    <div>
+                        <img src="/img/@Model.Img" alt="Текущее изображение" style="max-height: 100px;" />
+                        <p><small>Текущее изображение</small></p>
+                    </div>
+                }
+                <input type="file" class="form-control" name="files" accept="image/*" />
+                <small>Оставьте пустым, чтобы сохранить текущее изображение</small>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">URL изображения:</label>
-                <input type="text" class="form-control" name="imageUrl" placeholder="/img/no-image.png" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Категория:</label>
-                <select class="form-control" name="idCategory">
+            <div class="form-group">
+                <label>Категория:</label>
+                <select class="form-control" name="idCategory" required>
+                    <option value="">Выберите категорию</option>
                     @{
-                        var categories = ViewBag.Categories as IEnumerable<Shop.Data.Models.Categorys>;
+                        var categories = ViewBag.Categories as IEnumerable<Categorys>;
                         if (categories != null)
                         {
                             foreach (var cat in categories)
                             {
-                                <option value="@cat.Id">@cat.Name</option>
+                                if (Model.Category != null && cat.Id == Model.Category.Id)
+                                {
+                                    <option value="@cat.Id" selected>@cat.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@cat.Id">@cat.Name</option>
+                                }
                             }
                         }
                     }
                 </select>
             </div>
 
-            <button type="submit" class="btn btn-primary">💾 Сохранить</button>
-            <a href="/Items/List" class="btn btn-secondary">Отмена</a>
+            <button type="submit" class="btn-save">Сохранить</button>
+            <a href="/Items/List" class="btn-cancel">Отмена</a>
         </form>
     </div>
 </div>
